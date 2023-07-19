@@ -13,10 +13,18 @@ export default function Home() {
     firebaseApp = initializeFire()
     const database = getDatabase(firebaseApp)
     const dataRef = ref(database, "likes")
+    const star = document.querySelector(`.${styles.star}`)
+    const likes = document.querySelector('.numberLikes')
 
     onValue(dataRef, snapShot => {
-      const data = snapShot.val();
-      console.log(data);
+      let { color, like } = snapShot.val();
+
+      if(localStorage.getItem('like')) {
+        star.style.color = color;
+  
+      }
+
+      likes.innerText = like
     })
 
   }, [])
