@@ -17,7 +17,7 @@ export default function Home() {
     const likes = document.querySelector('.numberLikes')
 
     onValue(dataRef, snapShot => {
-      let { color, like } = snapShot.val();
+      const { color, like } = snapShot.val();
 
       if(localStorage.getItem('like')) {
         star.style.color = color;
@@ -30,16 +30,16 @@ export default function Home() {
   }, [])
 
   const handleLike = e => {
-    // Verifico se ja foi efetuado um like
+
     if(!localStorage.getItem('like')) {
-      // faco o like valer aqui
+
       const actualLikes = document.querySelector(`.numberLikes`)
       actualLikes.innerText = parseInt(actualLikes.innerText) + 1
       const like = actualLikes.innerText
       const star = document.querySelector(`.${styles.star}`)
       star.style.color = 'rgb(16 185 129)'
       localStorage.setItem('like', like)
-      // envio o like para o armazenamento
+      
       const database = getDatabase(firebaseApp)
       const dataBaseRef = ref(database, 'likes')
       const dataToSave = {
