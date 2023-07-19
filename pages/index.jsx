@@ -23,7 +23,7 @@ export default function Home() {
         star.style.color = color;
   
       }
-
+      console.log(color, like)
       likes.innerText = like
     })
 
@@ -39,7 +39,7 @@ export default function Home() {
       const star = document.querySelector(`.${styles.star}`)
       star.style.color = 'rgb(16 185 129)'
       localStorage.setItem('like', like)
-      
+
       const database = getDatabase(firebaseApp)
       const dataBaseRef = ref(database, 'likes')
       const dataToSave = {
