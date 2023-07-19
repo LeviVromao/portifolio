@@ -2,14 +2,47 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from '@/styles/Home.module.css'
+import { initializeFire } from '@/services/connectFire'
+import { getDatabase, ref, set, onValue } from "firebase/database"
+import { useEffect } from 'react'
 
 export default function Home() {
+  let firebaseApp;
+
+  useEffect(() => {
+    firebaseApp = initializeFire()
+    const database = getDatabase(firebaseApp)
+    const dataRef = ref(database, "likes")
+
+    onValue(dataRef, snapShot => {
+      const data = snapShot.val();
+      console.log(data);
+    })
+
+  }, [])
 
   const handleLike = e => {
-    const star = e.target
-    star.style.color = 'rgb(16, 185, 129)'
-    const like = document.querySelector('.numberLikes')
-    like.innerText
+    // Verifico se ja foi efetuado um like
+    if(!localStorage.getItem('like')) {
+      // faco o like valer aqui
+      const actualLikes = document.querySelector(`.numberLikes`)
+      actualLikes.innerText = parseInt(actualLikes.innerText) + 1
+      const like = actualLikes.innerText
+      const star = document.querySelector(`.${styles.star}`)
+      star.style.color = 'rgb(16 185 129)'
+      localStorage.setItem('like', like)
+      // envio o like para o armazenamento
+      const database = getDatabase(firebaseApp)
+      const dataBaseRef = ref(database, 'likes')
+      const dataToSave = {
+        color: 'rgb(16, 185, 129)',
+        like: actualLikes.innerText
+      }
+      set(dataBaseRef, dataToSave)
+      .then(console.log('Dados enviados com sucesso!'))
+      .catch(err => console.log('Erro ao enviar os dados', err))
+      return
+    }
   }
 
   return (
@@ -20,7 +53,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/logo.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
         <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet"/>
       </Head>
       <header className={styles.header}>
