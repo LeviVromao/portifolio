@@ -16,7 +16,7 @@ export default function Home( { data } ) {
       const star = document.querySelector(`.${styles.star}`)
       star.style.color = 'rgb(16, 185, 129)'
 
-      await fetch('http://localhost:3000/api/likes', {
+      await fetch('https://portifolio-levi-vitor-romao.vercel.app/api/likes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -119,7 +119,7 @@ export default function Home( { data } ) {
             <div className={styles.projects}>
               <ul>
                 <li>
-                  <Link href='https://portifolio-levi-vitor-romao.vercel.app/'>
+                  <Link href='https://portifolio-levi-vitor-romao.vercel.app/' target='_blank'>
                     <h1>Watch Party</h1>
                     <p> Um dos projeto mais complicado que já fiz, nele você poderá criar uma conta, fazer login, conversar com seus amigos enquanto assiste algum conteúdo da internet junto à seu amigo, por exemplo, vídeos. Feito com back end e front end, utilizando Next ( React ),
 MongoDB,Web Socket para troca de dados em tempo real, JSON Web Token para segurança, APIs REST
@@ -128,13 +128,13 @@ e JSON para troca de dados.
                   </Link>
                 </li>
                 <li>
-                  <Link href='https://watch-party-app-jade.vercel.app/'>
+                  <Link href='https://watch-party-app-jade.vercel.app/' target='_blank'>
                     <h1>Clone Da Netflix</h1>
                     <p>Um aplicativo simulando a Netflix, contendo filmes em lançamento, filmes que irão lançar e muitos detalhes sobre os filmes presentes. Construí usando React, consumindo uma API do TMDB movies. Você precisa se cadastrar no site e fazer Login para utilizar...</p>
                   </Link>
                 </li>
                 <li>
-                  <Link href='/'>
+                  <Link href='https://levivromao.github.io/EncurtadorDeURL/' target='_blank'>
                     <h1>Encurtador de URL</h1>
                     <p>Um projeto simples que fiz no ínicio do meu estudo sobre programação, então ele tem um significado importante para mim. Fiz ele utilizando uma API que ao enviar os Links, ela os encurta e retorna um link encurtado para o usúario.</p>
                   </Link>
@@ -203,7 +203,7 @@ e JSON para troca de dados.
 
 export const getServerSideProps = async (ctx) => {
  
-  const res = await fetch('http://localhost:3000/api/likes', {
+  const res = await fetch('https://portifolio-levi-vitor-romao.vercel.app/api/likes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
