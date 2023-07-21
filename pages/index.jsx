@@ -2,54 +2,30 @@ import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
 import styles from '@/styles/Home.module.css'
-import { initializeFire } from '@/services/connectFire'
-import { getDatabase, ref, set, onValue } from "firebase/database"
-import { useEffect } from 'react'
+import fetch from 'isomorphic-unfetch'
 
-export default function Home() {
-  let firebaseApp;
+export default function Home( { data } ) {
 
-  useEffect(() => {
-    firebaseApp = initializeFire()
-    const database = getDatabase(firebaseApp)
-    const dataRef = ref(database, "likes")
-    const star = document.querySelector(`.${styles.star}`)
-    const likes = document.querySelector('.numberLikes')
+  const handleLike = async e => {
 
-    onValue(dataRef, snapShot => {
-      const { color, like } = snapShot.val();
-
-      if(localStorage.getItem('like')) {
-        star.style.color = color;
-  
-      }
-      console.log(color, like)
-      likes.innerText = like
-    })
-
-  }, [])
-
-  const handleLike = e => {
-
-    if(!localStorage.getItem('like')) {
+    if(!localStorage.getItem('likes')) {
 
       const actualLikes = document.querySelector(`.numberLikes`)
       actualLikes.innerText = parseInt(actualLikes.innerText) + 1
       const like = actualLikes.innerText
       const star = document.querySelector(`.${styles.star}`)
-      star.style.color = 'rgb(16 185 129)'
-      localStorage.setItem('like', like)
+      star.style.color = 'rgb(16, 185, 129)'
 
-      const database = getDatabase(firebaseApp)
-      const dataBaseRef = ref(database, 'likes')
-      const dataToSave = {
-        color: 'rgb(16, 185, 129)',
-        like: actualLikes.innerText
-      }
-      set(dataBaseRef, dataToSave)
-      .then(console.log('Dados enviados com sucesso!'))
-      .catch(err => console.log('Erro ao enviar os dados', err))
-      return
+      await fetch('http://localhost:3000/api/likes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({like})
+      })
+
+      localStorage.setItem('likes', like)
+     
     }
   }
 
@@ -93,20 +69,29 @@ export default function Home() {
             <h3>Sou um <span className={styles.dev}>Desenvolvedor Full-Stack</span>, especializado em React e Node</h3>
           </div>
           <div className={styles.like} onClick={ handleLike }>
-            <svg xmlns="http://www.w3.org/2000/svg" className={styles.star} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="28" height="28"><path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd"></path></svg>
-            <span className='numberLikes'>0</span>
+          {data? 
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" className={styles.star} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="28" height="28"><path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd" fill={`${data.color}`}></path></svg>
+              <span className='numberLikes'>{ data.like }</span>
+            </>
+          : 
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" className={styles.star} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="28" height="28"><path fillRule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.007 5.404.433c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.433 2.082-5.006z" clipRule="evenodd"></path></svg>
+              <span className='numberLikes'>0</span>
+            </>
+          }
           </div>
         </section>
         <section className={styles.socialMedia}>
-          <Link href='/' className={styles.media}>
+          <Link href='https://www.linkedin.com/in/vitor-calixto-739022230/' target='_blank' rel="noopener noreferrer" className={styles.media}>
             <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 1C1.44772 1 1 1.44772 1 2V13C1 13.5523 1.44772 14 2 14H13C13.5523 14 14 13.5523 14 13V2C14 1.44772 13.5523 1 13 1H2ZM3.05 6H4.95V12H3.05V6ZM5.075 4.005C5.075 4.59871 4.59371 5.08 4 5.08C3.4063 5.08 2.925 4.59871 2.925 4.005C2.925 3.41129 3.4063 2.93 4 2.93C4.59371 2.93 5.075 3.41129 5.075 4.005ZM12 8.35713C12 6.55208 10.8334 5.85033 9.67449 5.85033C9.29502 5.83163 8.91721 5.91119 8.57874 6.08107C8.32172 6.21007 8.05265 6.50523 7.84516 7.01853H7.79179V6.00044H6V12.0047H7.90616V8.8112C7.8786 8.48413 7.98327 8.06142 8.19741 7.80987C8.41156 7.55832 8.71789 7.49825 8.95015 7.46774H9.02258C9.62874 7.46774 10.0786 7.84301 10.0786 8.78868V12.0047H11.9847L12 8.35713Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
             Linkedin
           </Link>
-          <Link href='/' className={styles.media}>
+          <Link href='https://github.com/LeviVromao' target='_blank' className={styles.media}>
             <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.49933 0.25C3.49635 0.25 0.25 3.49593 0.25 7.50024C0.25 10.703 2.32715 13.4206 5.2081 14.3797C5.57084 14.446 5.70302 14.2222 5.70302 14.0299C5.70302 13.8576 5.69679 13.4019 5.69323 12.797C3.67661 13.235 3.25112 11.825 3.25112 11.825C2.92132 10.9874 2.44599 10.7644 2.44599 10.7644C1.78773 10.3149 2.49584 10.3238 2.49584 10.3238C3.22353 10.375 3.60629 11.0711 3.60629 11.0711C4.25298 12.1788 5.30335 11.8588 5.71638 11.6732C5.78225 11.205 5.96962 10.8854 6.17658 10.7043C4.56675 10.5209 2.87415 9.89918 2.87415 7.12104C2.87415 6.32925 3.15677 5.68257 3.62053 5.17563C3.54576 4.99226 3.29697 4.25521 3.69174 3.25691C3.69174 3.25691 4.30015 3.06196 5.68522 3.99973C6.26337 3.83906 6.8838 3.75895 7.50022 3.75583C8.1162 3.75895 8.73619 3.83906 9.31523 3.99973C10.6994 3.06196 11.3069 3.25691 11.3069 3.25691C11.7026 4.25521 11.4538 4.99226 11.3795 5.17563C11.8441 5.68257 12.1245 6.32925 12.1245 7.12104C12.1245 9.9063 10.4292 10.5192 8.81452 10.6985C9.07444 10.9224 9.30633 11.3648 9.30633 12.0413C9.30633 13.0102 9.29742 13.7922 9.29742 14.0299C9.29742 14.2239 9.42828 14.4496 9.79591 14.3788C12.6746 13.4179 14.75 10.7025 14.75 7.50024C14.75 3.49593 11.5036 0.25 7.49933 0.25Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
             GitHub
           </Link>
-          <Link href='/' className={styles.media}>
+          <Link href='mailto:Zxvitor1@hotmail.com' className={styles.media}>
             <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 2C0.447715 2 0 2.44772 0 3V12C0 12.5523 0.447715 13 1 13H14C14.5523 13 15 12.5523 15 12V3C15 2.44772 14.5523 2 14 2H1ZM1 3L14 3V3.92494C13.9174 3.92486 13.8338 3.94751 13.7589 3.99505L7.5 7.96703L1.24112 3.99505C1.16621 3.94751 1.0826 3.92486 1 3.92494V3ZM1 4.90797V12H14V4.90797L7.74112 8.87995C7.59394 8.97335 7.40606 8.97335 7.25888 8.87995L1 4.90797Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
             Email
           </Link>
@@ -134,7 +119,7 @@ export default function Home() {
             <div className={styles.projects}>
               <ul>
                 <li>
-                  <Link href='/'>
+                  <Link href='https://portifolio-levi-vitor-romao.vercel.app/'>
                     <h1>Watch Party</h1>
                     <p> Um dos projeto mais complicado que já fiz, nele você poderá criar uma conta, fazer login, conversar com seus amigos enquanto assiste algum conteúdo da internet junto à seu amigo, por exemplo, vídeos. Feito com back end e front end, utilizando Next ( React ),
 MongoDB,Web Socket para troca de dados em tempo real, JSON Web Token para segurança, APIs REST
@@ -143,7 +128,7 @@ e JSON para troca de dados.
                   </Link>
                 </li>
                 <li>
-                  <Link href='/'>
+                  <Link href='https://watch-party-app-jade.vercel.app/'>
                     <h1>Clone Da Netflix</h1>
                     <p>Um aplicativo simulando a Netflix, contendo filmes em lançamento, filmes que irão lançar e muitos detalhes sobre os filmes presentes. Construí usando React, consumindo uma API do TMDB movies. Você precisa se cadastrar no site e fazer Login para utilizar...</p>
                   </Link>
@@ -214,4 +199,27 @@ e JSON para troca de dados.
       </main>
     </div>
   )
+}
+
+export const getServerSideProps = async (ctx) => {
+ 
+  const res = await fetch('http://localhost:3000/api/likes', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+  const data = await res.json();
+
+  if(data.like > 0) {
+    return {
+      props: {
+        data
+      }
+    }
+  }
+
+  return {
+    props: {}
+  }
 }
