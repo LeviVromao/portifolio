@@ -16,7 +16,7 @@ export default function Home( { data } ) {
       const star = document.querySelector(`.${styles.star}`)
       star.style.color = 'rgb(16, 185, 129)'
 
-      await fetch('http://localhost:3000/api/likes', {
+      await fetch('https://portifolio-levi-vitor-romao.vercel.app/api/likes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -203,7 +203,7 @@ e JSON para troca de dados.
 
 export const getServerSideProps = async (ctx) => {
  
-  const res = await fetch('http://localhost:3000/api/likes', {
+  const res = await fetch('https://portifolio-levi-vitor-romao.vercel.app/api/likes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
