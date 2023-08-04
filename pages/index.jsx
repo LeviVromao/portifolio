@@ -119,7 +119,7 @@ export default function Home( { data } ) {
             <div className={styles.projects}>
               <ul>
                 <li>
-                  <Link href='https://watch-party-app-jade.vercel.app/' target='_blank'>
+                  <Link href='https://watch-party-levi.vercel.app/' target='_blank'>
                     <h1>Watch Party</h1>
                     <p> Um dos projeto mais complicado que já fiz, nele você poderá criar uma conta, fazer login, conversar com seus amigos enquanto assiste algum conteúdo da internet junto à seu amigo, por exemplo, vídeos. Feito com back end e front end, utilizando Next ( React ),
 MongoDB,Web Socket para troca de dados em tempo real, JSON Web Token para segurança, APIs REST
