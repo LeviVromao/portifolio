@@ -112,16 +112,18 @@
 .star {
     width: 1.8rem;
     height: 1.8rem;
-    color: #Ffd700;
+    fill: #Ffd700;
 }
 
 .star:hover {
-    color: rgb(16 185 129);
+    fill: rgb(16 185 129);
 }
+
 .like span {
     font-size: 20px;
     color: rgb(228 228 221);
 }
+
 .socialMedia {
     display: flex;
     gap: 1.4rem;
