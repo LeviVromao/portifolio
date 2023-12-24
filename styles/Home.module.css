@@ -178,11 +178,17 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.projectsList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     overflow-y: scroll;
     height: 500px;
 }
 
-.projects::-webkit-scrollbar {
+.projectsList::-webkit-scrollbar {
     width: 15px;
     border-radius: 7px;
     background: rgb( 9 9 11);
@@ -211,11 +217,11 @@
     color: rgb(16 185 129);
 }
 
-.favoriteProjects .projects ul {
+.favoriteProjects .projectsList ul {
     list-style: none;
 }
 
-.favoriteProjects .projects li {
+.favoriteProjects .projectsList li {
     border: 1px solid rgb(228 228 221);
     border-radius: 9px;
     padding: 10px;
@@ -223,20 +229,20 @@
     margin-bottom: 13px;
 }
 
-.favoriteProjects .projects li:hover, .favoriteProjects .projects li a h1:hover {
+.favoriteProjects .projectsList li:hover, .favoriteProjects .projectsList li a h1:hover {
     background: rgb(25 26 37);
     color: aqua;
 }
 
-.favoriteProjects .projects li a {
+.favoriteProjects .projectsList li a {
     text-decoration: none;
 }
 
-.favoriteProjects .projects li a h1 {
+.favoriteProjects .projectsList li a h1 {
     color: rgb(228 228 221);
 }
 
-.favoriteProjects .projects li a p {
+.favoriteProjects .projectsList li a p {
     color: rgb(161 161 170);
 }
 

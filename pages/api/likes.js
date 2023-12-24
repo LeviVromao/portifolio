@@ -3,7 +3,6 @@ import { makeLikesWork, getLikes } from "@/services/handleLikes";
 
 export default async function handler(req, res) {
     
-
     if(req.method === 'POST') {
         await createConnection()
         const { like } = req.body;
