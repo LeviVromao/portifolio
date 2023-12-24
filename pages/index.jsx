@@ -129,9 +129,15 @@ e JSON para troca de dados.
                   </Link>
                 </li>
                 <li>
-                  <Link href='https://clone-netflix-ten-eta.vercel.app/' target='_blank'>
+                  <Link href='https://clone-filmes-vitor.vercel.app/' target='_blank'>
                     <h1>Clone Da Netflix</h1>
                     <p>Um aplicativo simulando a Netflix, contendo filmes em lançamento, filmes que irão lançar e muitos detalhes sobre os filmes presentes. Construí usando React, consumindo uma API do TMDB movies. Você precisa se cadastrar no site e fazer Login para utilizar...</p>
+                  </Link>
+                </li>
+                <li>
+                  <Link href='https://book-share-seven.vercel.app/' target='_blank'>
+                    <h1>Book Share</h1>
+                    <p>Está sendo feito um site onde as pessoas vão poder compartilhar, comprar, vender livros, fazer sessão de leituras, seja por chat ou chamada de vídeo/audio.</p>
                   </Link>
                 </li>
                 <li>
