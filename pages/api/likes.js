@@ -1,5 +1,5 @@
-import {createConnection } from "@/services/connectMongo";
-import { makeLikesWork, getLikes } from "@/services/handleLikes";
+import {createConnection } from "../../services/connectMongo";
+import { makeLikesWork, getLikes } from "../../services/handleLikes";
 
 export default async function handler(req, res) {
     
