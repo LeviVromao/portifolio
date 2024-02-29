@@ -134,19 +134,16 @@
     display: flex;
     gap: 0.6rem;
     text-decoration: none;
-    align-items: flex-end;
     color: rgb( 212 212 216);
+    transition: all 0.4s;
     padding: 6px;
+    border-radius: 3px;
 }
 
 .media:hover {
     color: rgb(16 185 129);
     background: rgb(25 26 37);
-    border-radius: 3px;
-    height: 33px;
-    font-size: 17px;
-    transition: all 0.4s;
-    align-items: center;
+    transform: scale(1.07);
 }
 
 .mediaP {
@@ -205,6 +202,7 @@
 }
 
 .favoriteProjects .title a {
+    gap: 12px;
     align-self: flex-end;
     text-decoration: none;
     color: rgb(228 228 221);
@@ -229,13 +227,16 @@
     margin-bottom: 13px;
 }
 
+.favoriteProjects .projectsList li a {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+    text-decoration: none;
+}
+
 .favoriteProjects .projectsList li:hover, .favoriteProjects .projectsList li a h1:hover {
     background: rgb(25 26 37);
     color: aqua;
-}
-
-.favoriteProjects .projectsList li a {
-    text-decoration: none;
 }
 
 .favoriteProjects .projectsList li a h1 {
