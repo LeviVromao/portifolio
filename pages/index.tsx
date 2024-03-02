@@ -279,4 +279,10 @@ export const getServerSideProps = async (_ctx: any) => {
     }
   }
   }
+
+  return {
+    props: {
+      musics
+    }
+  }
 }
