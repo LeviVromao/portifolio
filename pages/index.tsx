@@ -138,7 +138,7 @@ export default function Home( { data, musics } ) {
           </div>
           <div className={styles.contentContainer}>
             <BiSolidSkipPreviousCircle style={{fontWeight: 'bold', color: 'aqua', fontSize: 40 }} className={styles.media}  onClick={previousMusic}/>
-            <button style={{fontWeight: 'bold', color: 'aqua', fontSize: 13, border: "none", background: 'transparent'}} ref={controlMusicRef} onClick={playAudio} className={styles.media}>Tocar Música</button>
+            <button style={{fontWeight: 'bold', color: 'aqua', fontSize: 13, border: "none", height: "100%" , background: 'transparent'}} ref={controlMusicRef} onClick={playAudio} className={styles.media}>Tocar Música</button>
             <BiSolidSkipPreviousCircle style={{fontWeight: 'bold', color: 'aqua', fontSize: 40, transform: 'rotate(180deg)'}} onClick={nextMusic} className={styles.media} />
           </div>
         </section>
@@ -256,15 +256,21 @@ export default function Home( { data, musics } ) {
 }
 
 export const getServerSideProps = async (_ctx: any) => {
-  const res = await fetch('https://portifolio-levi-vitor-romao.vercel.app/api/likes', {
+  const resLikes = await fetch('https://portifolio-levi-vitor-romao.vercel.app/api/likes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
     }
   })
-  const musics = fs.readdirSync("./public/musics")
-  const data = await res.json();
-
+  const resMusics = await fetch("https://portifolio-levi-vitor-romao.vercel.app/api/musics", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  const { musics } = await resMusics.json()
+  const data = await resLikes.json();
+  
   if(data.like > 0) {
     return {
     props: {
