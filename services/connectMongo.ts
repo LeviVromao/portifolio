@@ -9,13 +9,13 @@ if(!process.env.MONGODB_URI) {
 const createConnection = async () => {
     const uri = process.env.MONGODB_URI
     mongoose.connect(uri)
-    .then(console.log(' Database connected with succes'))
+    .then(() => console.log(' Database connected with succes'))
     .catch(err => console.error('Error', err));
 }
 
 const disconnect = async () => {
     mongoose.disconnect()
-    .then(console.log('Disconectado'))
+    .then(() => console.log('Disconectado'))
     .catch(err => console.error('Erro', err))
 }
 
