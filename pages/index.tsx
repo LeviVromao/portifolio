@@ -269,7 +269,6 @@ export const getServerSideProps = async (_ctx: any) => {
     }
   })
   const { musics } = await resMusics.json()
-  console.log(musics)
   const data = await resLikes.json();
   
   if(data.like > 0) {
