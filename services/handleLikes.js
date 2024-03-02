@@ -8,7 +8,7 @@ const likeSchema = new Schema({
 
 let Like = models.Like || model('Like', likeSchema)
 
-const makeLikesWork = async ( like: string ) => {
+const makeLikesWork = async ( like ) => {
     try {
         const likes = await Like.findOne()
 
@@ -21,7 +21,6 @@ const makeLikesWork = async ( like: string ) => {
         console.error(error)
 
     }
-
 }
 
 const getLikes = async () => {
