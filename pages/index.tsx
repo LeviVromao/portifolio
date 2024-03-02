@@ -4,14 +4,21 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 import fetch from 'isomorphic-unfetch'
-import fs from "fs"
 import { BiSolidSkipPreviousCircle } from "react-icons/bi";
 import React, { useRef, useState } from 'react'
 
-export default function Home( { data, musics } ) {
+export default function Home( { data } ) {
   const [actualMusicIndex, setActualMusicIndex] = useState<number>(0)
   const kanyeRef = useRef<HTMLAudioElement>(null)
   const controlMusicRef= useRef<HTMLButtonElement>(null)
+
+  const musics = [
+    "kanye-ty-paid.wav",
+    "teo glacier - pretend.wav",
+    "took-a-pill-in-ibiza.wav",
+    "need-me-streets.wav",
+    "travis-scott-beibs.wav"
+  ]
 
   const previousMusic = () => {
     if(musics.indexOf(musics[actualMusicIndex]) === 0 && controlMusicRef.current) {
@@ -262,27 +269,18 @@ export const getServerSideProps = async (_ctx: any) => {
       'Content-Type': 'application/json'
     }
   })
-  const resMusics = await fetch("https://portifolio-levi-vitor-romao.vercel.app/api/musics", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-  const { musics } = await resMusics.json()
   const data = await resLikes.json();
   
   if(data.like > 0) {
     return {
     props: {
-      data,
-      musics
+      data
     }
   }
   }
 
   return {
     props: {
-      musics
     }
   }
 }
