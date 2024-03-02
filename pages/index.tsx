@@ -11,7 +11,6 @@ import React, { useRef, useState } from 'react'
 export default function Home( { data, musics } ) {
   const [actualMusicIndex, setActualMusicIndex] = useState<number>(0)
   const kanyeRef = useRef<HTMLAudioElement>(null)
-  const spotifyPlayerRef = useRef<HTMLIFrameElement>(null)
   const controlMusicRef= useRef<HTMLButtonElement>(null)
 
   const previousMusic = () => {

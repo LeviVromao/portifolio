@@ -8,7 +8,7 @@ const likeSchema = new Schema({
 
 let Like = models.Like || model('Like', likeSchema)
 
-const makeLikesWork = async ( like, color ) => {
+const makeLikesWork = async ( like: string ) => {
     try {
         const likes = await Like.findOne()
 
