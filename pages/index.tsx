@@ -263,7 +263,7 @@ export const getServerSideProps = async (_ctx: any) => {
     }
   })
   const resMusics = await fetch("https://portifolio-levi-vitor-romao.vercel.app/api/musics", {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json"
     }
