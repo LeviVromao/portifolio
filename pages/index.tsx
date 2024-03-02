@@ -4,16 +4,52 @@ import Image from 'next/image'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 import fetch from 'isomorphic-unfetch'
-import React from 'react'
+import fs from "fs"
+import { BiSolidSkipPreviousCircle } from "react-icons/bi";
+import React, { useRef, useState } from 'react'
 
-export default function Home( { data } ) {
+export default function Home( { data, musics } ) {
+  const [actualMusicIndex, setActualMusicIndex] = useState<number>(0)
+  const kanyeRef = useRef<HTMLAudioElement>(null)
+  const spotifyPlayerRef = useRef<HTMLIFrameElement>(null)
+  const controlMusicRef= useRef<HTMLButtonElement>(null)
 
-  const handleLike = async e => {
+  const previousMusic = () => {
+    if(musics.indexOf(musics[actualMusicIndex]) === 0 && controlMusicRef.current) {
+      controlMusicRef.current.innerHTML = "Pausar Música"
+      setActualMusicIndex(musics.length - 1)
+    } else {
+      setActualMusicIndex(previous => previous - 1)
+    }
+  }
+  
+  const nextMusic = () => {
+   const arraySize = musics.length - 1
+   if(actualMusicIndex === arraySize && controlMusicRef.current) {
+      controlMusicRef.current.innerHTML = "Pausar Música"
+      setActualMusicIndex(0)
+   } else {
+      setActualMusicIndex(previous => previous + 1)
+   }
+  }
 
+  const playAudio = (e: any) => {
+    if(kanyeRef.current) {
+      if(e.target.innerHTML === "Pausar Música") {
+        e.target.innerHTML = "Tocar Música"
+        kanyeRef.current.pause()
+      } else {
+        e.target.innerHTML = "Pausar Música"
+        kanyeRef.current.play()
+      }
+    }  
+  }
+
+  const handleLike = async (_e: any) => {
     if(!localStorage.getItem('likes')) {
-
       const actualLikes = document.querySelector(`.numberLikes`) as HTMLDivElement
-      actualLikes.innerText = actualLikes.innerText + 1
+      const sumLikes = parseInt(actualLikes.innerText) + 1
+      actualLikes.innerText = sumLikes.toString()
       const like = actualLikes.innerText
       const star = document.querySelector(`.${styles.star}`) as HTMLDivElement
       star.style.fill = 'rgb(16, 185, 129)'
@@ -25,9 +61,7 @@ export default function Home( { data } ) {
         },
         body: JSON.stringify({like})
       })
-
       localStorage.setItem('likes', like)
-     
     }
   }
 
@@ -44,6 +78,9 @@ export default function Home( { data } ) {
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/devicon.min.css"/>
       </Head>
       <header className={styles.header}>
+        <audio key={musics[actualMusicIndex]} style={{ position: 'absolute', visibility: 'hidden' }} autoPlay ref={kanyeRef}>
+          <source src={`/musics/${musics[actualMusicIndex]}`} type='audio/mp3'/>
+        </audio>
         <div className={styles.headerItems}>
           <Link 
             href='/'
@@ -86,18 +123,25 @@ export default function Home( { data } ) {
           </div>
         </section>
         <section className={styles.socialMedia}>
-          <Link href='https://www.linkedin.com/in/vitor-romao-739022230/' target='_blank' rel="noopener noreferrer" className={styles.media}>
-            <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 1C1.44772 1 1 1.44772 1 2V13C1 13.5523 1.44772 14 2 14H13C13.5523 14 14 13.5523 14 13V2C14 1.44772 13.5523 1 13 1H2ZM3.05 6H4.95V12H3.05V6ZM5.075 4.005C5.075 4.59871 4.59371 5.08 4 5.08C3.4063 5.08 2.925 4.59871 2.925 4.005C2.925 3.41129 3.4063 2.93 4 2.93C4.59371 2.93 5.075 3.41129 5.075 4.005ZM12 8.35713C12 6.55208 10.8334 5.85033 9.67449 5.85033C9.29502 5.83163 8.91721 5.91119 8.57874 6.08107C8.32172 6.21007 8.05265 6.50523 7.84516 7.01853H7.79179V6.00044H6V12.0047H7.90616V8.8112C7.8786 8.48413 7.98327 8.06142 8.19741 7.80987C8.41156 7.55832 8.71789 7.49825 8.95015 7.46774H9.02258C9.62874 7.46774 10.0786 7.84301 10.0786 8.78868V12.0047H11.9847L12 8.35713Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
-            Linkedin
-          </Link>
-          <Link href='https://github.com/LeviVromao' target='_blank' className={styles.media}>
-            <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.49933 0.25C3.49635 0.25 0.25 3.49593 0.25 7.50024C0.25 10.703 2.32715 13.4206 5.2081 14.3797C5.57084 14.446 5.70302 14.2222 5.70302 14.0299C5.70302 13.8576 5.69679 13.4019 5.69323 12.797C3.67661 13.235 3.25112 11.825 3.25112 11.825C2.92132 10.9874 2.44599 10.7644 2.44599 10.7644C1.78773 10.3149 2.49584 10.3238 2.49584 10.3238C3.22353 10.375 3.60629 11.0711 3.60629 11.0711C4.25298 12.1788 5.30335 11.8588 5.71638 11.6732C5.78225 11.205 5.96962 10.8854 6.17658 10.7043C4.56675 10.5209 2.87415 9.89918 2.87415 7.12104C2.87415 6.32925 3.15677 5.68257 3.62053 5.17563C3.54576 4.99226 3.29697 4.25521 3.69174 3.25691C3.69174 3.25691 4.30015 3.06196 5.68522 3.99973C6.26337 3.83906 6.8838 3.75895 7.50022 3.75583C8.1162 3.75895 8.73619 3.83906 9.31523 3.99973C10.6994 3.06196 11.3069 3.25691 11.3069 3.25691C11.7026 4.25521 11.4538 4.99226 11.3795 5.17563C11.8441 5.68257 12.1245 6.32925 12.1245 7.12104C12.1245 9.9063 10.4292 10.5192 8.81452 10.6985C9.07444 10.9224 9.30633 11.3648 9.30633 12.0413C9.30633 13.0102 9.29742 13.7922 9.29742 14.0299C9.29742 14.2239 9.42828 14.4496 9.79591 14.3788C12.6746 13.4179 14.75 10.7025 14.75 7.50024C14.75 3.49593 11.5036 0.25 7.49933 0.25Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
-            GitHub
-          </Link>
-          <Link href='mailto:Zxvitor1@hotmail.com' className={styles.media}>
-            <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 2C0.447715 2 0 2.44772 0 3V12C0 12.5523 0.447715 13 1 13H14C14.5523 13 15 12.5523 15 12V3C15 2.44772 14.5523 2 14 2H1ZM1 3L14 3V3.92494C13.9174 3.92486 13.8338 3.94751 13.7589 3.99505L7.5 7.96703L1.24112 3.99505C1.16621 3.94751 1.0826 3.92486 1 3.92494V3ZM1 4.90797V12H14V4.90797L7.74112 8.87995C7.59394 8.97335 7.40606 8.97335 7.25888 8.87995L1 4.90797Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
-            Email
-          </Link>
+          <div className={styles.contentContainer}>
+            <Link href='https://www.linkedin.com/in/vitor-romao-739022230/' target='_blank' rel="noopener noreferrer" className={styles.media}>
+              <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 1C1.44772 1 1 1.44772 1 2V13C1 13.5523 1.44772 14 2 14H13C13.5523 14 14 13.5523 14 13V2C14 1.44772 13.5523 1 13 1H2ZM3.05 6H4.95V12H3.05V6ZM5.075 4.005C5.075 4.59871 4.59371 5.08 4 5.08C3.4063 5.08 2.925 4.59871 2.925 4.005C2.925 3.41129 3.4063 2.93 4 2.93C4.59371 2.93 5.075 3.41129 5.075 4.005ZM12 8.35713C12 6.55208 10.8334 5.85033 9.67449 5.85033C9.29502 5.83163 8.91721 5.91119 8.57874 6.08107C8.32172 6.21007 8.05265 6.50523 7.84516 7.01853H7.79179V6.00044H6V12.0047H7.90616V8.8112C7.8786 8.48413 7.98327 8.06142 8.19741 7.80987C8.41156 7.55832 8.71789 7.49825 8.95015 7.46774H9.02258C9.62874 7.46774 10.0786 7.84301 10.0786 8.78868V12.0047H11.9847L12 8.35713Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
+              Linkedin
+            </Link>
+            <Link href='https://github.com/LeviVromao' target='_blank' className={styles.media}>
+              <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.49933 0.25C3.49635 0.25 0.25 3.49593 0.25 7.50024C0.25 10.703 2.32715 13.4206 5.2081 14.3797C5.57084 14.446 5.70302 14.2222 5.70302 14.0299C5.70302 13.8576 5.69679 13.4019 5.69323 12.797C3.67661 13.235 3.25112 11.825 3.25112 11.825C2.92132 10.9874 2.44599 10.7644 2.44599 10.7644C1.78773 10.3149 2.49584 10.3238 2.49584 10.3238C3.22353 10.375 3.60629 11.0711 3.60629 11.0711C4.25298 12.1788 5.30335 11.8588 5.71638 11.6732C5.78225 11.205 5.96962 10.8854 6.17658 10.7043C4.56675 10.5209 2.87415 9.89918 2.87415 7.12104C2.87415 6.32925 3.15677 5.68257 3.62053 5.17563C3.54576 4.99226 3.29697 4.25521 3.69174 3.25691C3.69174 3.25691 4.30015 3.06196 5.68522 3.99973C6.26337 3.83906 6.8838 3.75895 7.50022 3.75583C8.1162 3.75895 8.73619 3.83906 9.31523 3.99973C10.6994 3.06196 11.3069 3.25691 11.3069 3.25691C11.7026 4.25521 11.4538 4.99226 11.3795 5.17563C11.8441 5.68257 12.1245 6.32925 12.1245 7.12104C12.1245 9.9063 10.4292 10.5192 8.81452 10.6985C9.07444 10.9224 9.30633 11.3648 9.30633 12.0413C9.30633 13.0102 9.29742 13.7922 9.29742 14.0299C9.29742 14.2239 9.42828 14.4496 9.79591 14.3788C12.6746 13.4179 14.75 10.7025 14.75 7.50024C14.75 3.49593 11.5036 0.25 7.49933 0.25Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
+              GitHub
+            </Link>
+            <Link href='mailto:Zxvitor1@hotmail.com' className={styles.media}>
+              <svg width="20" height="20" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 2C0.447715 2 0 2.44772 0 3V12C0 12.5523 0.447715 13 1 13H14C14.5523 13 15 12.5523 15 12V3C15 2.44772 14.5523 2 14 2H1ZM1 3L14 3V3.92494C13.9174 3.92486 13.8338 3.94751 13.7589 3.99505L7.5 7.96703L1.24112 3.99505C1.16621 3.94751 1.0826 3.92486 1 3.92494V3ZM1 4.90797V12H14V4.90797L7.74112 8.87995C7.59394 8.97335 7.40606 8.97335 7.25888 8.87995L1 4.90797Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path></svg>
+              Email
+            </Link>
+          </div>
+          <div className={styles.contentContainer}>
+            <BiSolidSkipPreviousCircle style={{fontWeight: 'bold', color: 'aqua', fontSize: 40 }} className={styles.media}  onClick={previousMusic}/>
+            <button style={{fontWeight: 'bold', color: 'aqua', fontSize: 13, border: "none", background: 'transparent'}} ref={controlMusicRef} onClick={playAudio} className={styles.media}>Tocar Música</button>
+            <BiSolidSkipPreviousCircle style={{fontWeight: 'bold', color: 'aqua', fontSize: 40, transform: 'rotate(180deg)'}} onClick={nextMusic} className={styles.media} />
+          </div>
         </section>
         <section className={styles.aboutMe}>
           <div className={styles.description}>
@@ -134,9 +178,9 @@ export default function Home( { data } ) {
                   </Link>
                 </li>
                 <li>
-                  <Link href='https://book-share-seven.vercel.app/' target='_blank'>
-                    <h1>Book Share</h1>
-                    <p>Está sendo feito um site onde as pessoas vão poder compartilhar, comprar, vender livros, fazer sessão de leituras, seja por chat ou chamada de vídeo/audio.</p>
+                  <Link href='https://e-learning-mu-gray.vercel.app/' target='_blank'>
+                    <h1>E-Learning</h1>
+                    <p>Uma landing page para testar minhas habilidades em design e programação, mas pretendo adicionar mais funcionalidades para transformá-la em um aplicativo de aprendizagem completo.</p>
                   </Link>
                 </li>
               </ul>
@@ -199,6 +243,12 @@ export default function Home( { data } ) {
                 </svg>
               </li>
             </ul>
+            <div className={styles.musicsContainer}>
+              <h2 className={styles.musicsTitle}>🎵 Músicas que eu mais estou ouvindo no momento:</h2>
+              <iframe style={{borderRadius: 12}} src="https://open.spotify.com/embed/track/3VKW1b4IAxKvNoTki0fLIF?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+              <iframe style={{borderRadius: 12}} src="https://open.spotify.com/embed/track/5JycxhApZmzbA4xSwvqh6k?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+              <iframe style={{borderRadius: 12}} src="https://open.spotify.com/embed/track/2y4ZR0BUAVePljHSsZyIgj?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            </div>
           </div>
         </section>
       </main>
@@ -206,24 +256,22 @@ export default function Home( { data } ) {
   )
 }
 
-export const getServerSideProps = async (ctx) => {
+export const getServerSideProps = async (_ctx: any) => {
   const res = await fetch('https://portifolio-levi-vitor-romao.vercel.app/api/likes', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json'
     }
   })
+  const musics = fs.readdirSync("./public/musics")
   const data = await res.json();
 
   if(data.like > 0) {
     return {
     props: {
-      data
+      data,
+      musics
     }
   }
-  }
-
-  return {
-    props: {}
   }
 }

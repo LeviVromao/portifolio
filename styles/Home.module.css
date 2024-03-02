@@ -130,6 +130,12 @@
     margin-bottom: 22px;
 }
 
+.contentContainer {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
 .media {
     display: flex;
     gap: 0.6rem;
@@ -138,6 +144,9 @@
     transition: all 0.4s;
     padding: 6px;
     border-radius: 3px;
+    cursor: pointer;
+    align-items: center;
+    box-shadow: 0px 0px 16px #000;
 }
 
 .media:hover {
@@ -275,29 +284,46 @@
     filter: invert(100%);
 }
 
+.musicsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.musicsTitle {
+    color: #10B981;
+}
+
 @media (min-width: 650px) {
-    .projects {
-        display: flex;
-        align-items: flex-start;
-        flex-direction: row;
-        justify-content: space-between;
-    }
+  .projects {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 
-    .technologies {
-        width: 50%;
-    }
+  .technologies {
+    width: 50%;
+  }
 
-    .favoriteProjects {
-        width: 46%;
-    }
+  .favoriteProjects {
+    width: 46%;
+  }
 
-    .title {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-    }
+  .title {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-    .favoriteProjects .title a {
-        align-self: auto;
-    }
+  .favoriteProjects .title a {
+    align-self: auto;
+  }
+}
+
+@media (max-width: 523px) {
+  .socialMedia {
+    flex-direction: column;
+    align-items: center;
+  }
 }
