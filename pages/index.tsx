@@ -172,7 +172,7 @@ export default function Home( { data } ) {
             <div className={styles.projectsList}>
               <ul>
                 <li>
-                  <Link href='https://watch-party-levi.vercel.app/' target='_blank'>
+                  <Link href='https://watch-party-levi-app.vercel.app/' target='_blank'>
                     <h1>Watch Party</h1>
                     <p> Uma plataforma onde é possível conversar com amigos por chat enquanto assistem vídeos simultaneamente.</p>
                   </Link>
