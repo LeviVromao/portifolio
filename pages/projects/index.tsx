@@ -23,7 +23,7 @@ export default function AboutMe() {
             <h2 className={styles.watchPartyTitle}>Watch Party</h2>
             <p className={styles.siteLink}>https://watch-party-levi.vercel.app/</p>
           </Link>
-          <Link href="https://watch-party-levi.vercel.app/" target="_blank">
+          <Link href="https://watch-party-levi-app.vercel.app/" target="_blank">
             <Image src="/banner-watch-party.png" className={styles.bannerSites} alt="" width={210} height={210}/>
           </Link>
         </li>
