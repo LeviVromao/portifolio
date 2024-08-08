@@ -13,11 +13,14 @@ export default function Home( { data } ) {
   const controlMusicRef= useRef<HTMLButtonElement>(null)
 
   const musics = [
+    "sonder-what-you-heard.mp3",
+    "immortal.wav",
+    "travis-scott-beibs.wav",
+    "hear_me_tonight.mp3",
     "kanye-ty-paid.wav",
     "teo glacier - pretend.wav",
     "took-a-pill-in-ibiza.wav",
     "need-me-streets.wav",
-    "travis-scott-beibs.wav"
   ]
 
   const previousMusic = () => {
