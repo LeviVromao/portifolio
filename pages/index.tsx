@@ -266,24 +266,24 @@ export default function Home( { data } ) {
 }
 
 export const getServerSideProps = async (_ctx: any) => {
-  const resLikes = await fetch('https://portifolio-levi-vitor-romao.vercel.app/api/likes', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  })
-  const data = await resLikes.json();
+  //const resLikes = await fetch('https://portifolio-levi-vitor-romao.vercel.app/api/likes', {
+  //  method: 'GET',
+  //  headers: {
+  //    'Content-Type': 'application/json'
+  //  }
+  //})
+  //const data = await resLikes.json();
   
-  if(data.like > 0) {
-    return {
-    props: {
-      data
-    }
-  }
-  }
+  //if(data.like > 0) {
+  //  return {
+   // props: {
+    //  data
+   // }
+ // }
+ // }
 
   return {
-    props: {
+   props: {
     }
   }
 }
